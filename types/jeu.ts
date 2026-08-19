@@ -19,6 +19,11 @@ export interface ReponseRequerant {
   infosReveleesIds: string[];
   etatEmotionnel: EtatEmotionnel;
   raccrocheOuPerdReseau: boolean;
+  // Renseigné par la route /api/dialogue si le nombre de tours atteint
+  // déclenche une évolution du scénario (verite.evolutions). Le client
+  // l'affiche comme une réplique spontanée du requérant, jamais comme une
+  // notification système.
+  evenement?: string;
 }
 
 // Fiche d'alerte : remplie manuellement par l'opérateur, jamais pré-remplie.

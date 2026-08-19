@@ -140,3 +140,15 @@ export function repondreEnModeReplii(
     raccrocheOuPerdReseau: false,
   };
 }
+
+// Vérifie si le nombre de tours atteint déclenche une évolution du
+// scénario (ex : la victime cesse de respirer). Comparaison exacte : une
+// évolution ne se déclenche qu'au tour précis qui lui est associé.
+export function evolutionDeclenchee(
+  scenario: Scenario,
+  nombreDeTours: number
+): string | undefined {
+  return scenario.verite.evolutions.find(
+    (evolution) => evolution.apresNTours === nombreDeTours
+  )?.evenement;
+}

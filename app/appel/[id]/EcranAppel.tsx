@@ -1,5 +1,14 @@
 "use client";
 
+import {
+  CircleAlert,
+  CircleQuestionMark,
+  Clock,
+  FaceAngry,
+  FaceSlightlySmiling,
+  PhoneOff,
+  Siren,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import type { EtatEmotionnel } from "@/types/scenario";
 import {
   ficheAlerteVide,
   type FicheAlerte,
@@ -24,6 +34,43 @@ import {
 function idMessage(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
+
+function formaterDuree(ms: number): string {
+  const secondesTotales = Math.max(0, Math.floor(ms / 1000));
+  const minutes = Math.floor(secondesTotales / 60);
+  const secondes = secondesTotales % 60;
+  return `${minutes.toString().padStart(2, "0")}:${secondes
+    .toString()
+    .padStart(2, "0")}`;
+}
+
+const ETATS_EMOTIONNELS: Record<
+  EtatEmotionnel,
+  { libelle: string; Icone: typeof CircleAlert; classe: string }
+> = {
+  calme: { libelle: "Calme", Icone: FaceSlightlySmiling, classe: "text-success" },
+  inquiet: { libelle: "Inquiet", Icone: CircleAlert, classe: "text-warning" },
+  paniqué: { libelle: "Paniqué", Icone: Siren, classe: "text-destructive" },
+  agressif: { libelle: "Agressif", Icone: FaceAngry, classe: "text-destructive" },
+  confus: {
+    libelle: "Confus",
+    Icone: CircleQuestionMark,
+    classe: "text-muted-foreground",
+  },
+};
+
+// Aide optionnelle : injecte une question type dans le champ de saisie,
+// ne l'envoie jamais automatiquement. Désactivable par l'opérateur.
+const QUESTIONS_RAPIDES = [
+  { label: "Adresse ?", question: "Quelle est votre adresse ?" },
+  { label: "Numéro de rappel ?", question: "Quel est votre numéro de rappel ?" },
+  { label: "Conscient ?", question: "Est-ce que la personne est consciente ?" },
+  { label: "Respire ?", question: "Est-ce que la personne respire ?" },
+  {
+    label: "Combien de victimes ?",
+    question: "Combien de personnes sont concernées ?",
+  },
+];
 
 interface EcranAppelProps {
   scenarioId: string;
@@ -36,8 +83,26 @@ export function EcranAppel({ scenarioId, libelleNeutre }: EcranAppelProps) {
   const [enChargement, setEnChargement] = useState(true);
   const [envoiEnCours, setEnvoiEnCours] = useState(false);
   const [appelClos, setAppelClos] = useState(false);
+  const [appelInterrompu, setAppelInterrompu] = useState(false);
+  const [etatEmotionnel, setEtatEmotionnel] = useState<EtatEmotionnel>("calme");
+  const [aideVisible, setAideVisible] = useState(true);
   const [ficheAlerte, setFicheAlerte] = useState<FicheAlerte>(ficheAlerteVide);
+  const [secondesEcoulees, setSecondesEcoulees] = useState(0);
   const finDialogueRef = useRef<HTMLDivElement | null>(null);
+  const saisieRef = useRef<HTMLInputElement | null>(null);
+
+  // Chrono depuis le décrochage : tourne en continu, visible en permanence,
+  // et s'arrête à la clôture de l'appel. Un compteur de secondes (plutôt
+  // qu'un horodatage absolu) évite tout appel impur (Date.now()) pendant
+  // le rendu.
+  useEffect(() => {
+    if (appelClos) return;
+    const intervalle = setInterval(
+      () => setSecondesEcoulees((s) => s + 1),
+      1000
+    );
+    return () => clearInterval(intervalle);
+  }, [appelClos]);
 
   // Charge la réplique d'ouverture du requérant au décrochage.
   useEffect(() => {
@@ -47,6 +112,7 @@ export function EcranAppel({ scenarioId, libelleNeutre }: EcranAppelProps) {
       .then((reponse) => reponse.json())
       .then((ouverture: ReponseRequerant) => {
         if (annule) return;
+        setEtatEmotionnel(ouverture.etatEmotionnel);
         setDialogue([
           {
             id: idMessage(),
@@ -72,19 +138,33 @@ export function EcranAppel({ scenarioId, libelleNeutre }: EcranAppelProps) {
   const nombreDeTours = dialogue.filter((m) => m.locuteur === "operateur")
     .length;
 
-  async function envoyerQuestion() {
-    const texte = saisie.trim();
-    if (!texte || appelClos || envoiEnCours) return;
+  function ajouterMessageRequerant(texte: string) {
+    setDialogue((precedent) => [
+      ...precedent,
+      {
+        id: idMessage(),
+        locuteur: "requerant",
+        texte,
+        horodatage: secondesEcoulees * 1000,
+      },
+    ]);
+  }
+
+  async function envoyerQuestion(texteforce?: string) {
+    const texte = (texteforce ?? saisie).trim();
+    if (!texte || appelClos || appelInterrompu || envoiEnCours) return;
 
     const historiqueAvant = dialogue;
-    const messageOperateur: MessageDialogue = {
-      id: idMessage(),
-      locuteur: "operateur",
-      texte,
-      horodatage: Date.now(),
-    };
 
-    setDialogue((precedent) => [...precedent, messageOperateur]);
+    setDialogue((precedent) => [
+      ...precedent,
+      {
+        id: idMessage(),
+        locuteur: "operateur",
+        texte,
+        horodatage: secondesEcoulees * 1000,
+      },
+    ]);
     setSaisie("");
     setEnvoiEnCours(true);
 
@@ -100,16 +180,16 @@ export function EcranAppel({ scenarioId, libelleNeutre }: EcranAppelProps) {
       });
       const reponse = (await reponseApi.json()) as ReponseRequerant;
 
-      setDialogue((precedent) => [
-        ...precedent,
-        {
-          id: idMessage(),
-          locuteur: "requerant",
-          texte: reponse.reponse,
-          horodatage: Date.now(),
-          infosReveleesIds: reponse.infosReveleesIds,
-        },
-      ]);
+      setEtatEmotionnel(reponse.etatEmotionnel);
+      ajouterMessageRequerant(reponse.reponse);
+
+      if (reponse.evenement) {
+        window.setTimeout(() => ajouterMessageRequerant(reponse.evenement!), 900);
+      }
+
+      if (reponse.raccrocheOuPerdReseau) {
+        setAppelInterrompu(true);
+      }
     } finally {
       setEnvoiEnCours(false);
     }
@@ -122,88 +202,24 @@ export function EcranAppel({ scenarioId, libelleNeutre }: EcranAppelProps) {
     setFicheAlerte((precedente) => ({ ...precedente, [champ]: valeur }));
   }
 
+  function injecterQuestionRapide(question: string) {
+    setSaisie(question);
+    saisieRef.current?.focus();
+  }
+
+  const dureeAffichee = formaterDuree(secondesEcoulees * 1000);
+  const infosEtat = ETATS_EMOTIONNELS[etatEmotionnel];
+  const IconeEtat = infosEtat.Icone;
+  const saisieDesactivee =
+    appelClos || appelInterrompu || enChargement || envoiEnCours;
+
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-4 px-4 py-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold">{libelleNeutre}</h1>
-        <div className="flex items-center gap-3">
-          <Badge variant="outline">{nombreDeTours} question(s) posée(s)</Badge>
-          <Button
-            variant="destructive"
-            disabled={appelClos}
-            onClick={() => setAppelClos(true)}
-          >
-            Clore l&apos;appel et engager
-          </Button>
-        </div>
-      </div>
+    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-4 px-4 py-6">
+      <h1 className="text-lg font-semibold">{libelleNeutre}</h1>
 
-      <div className="grid flex-1 grid-cols-1 gap-4 md:grid-cols-3">
-        <Card className="md:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-sm text-muted-foreground">
-              Dialogue avec le requérant
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-4">
-            <div className="flex max-h-[50vh] min-h-[40vh] flex-col gap-3 overflow-y-auto rounded-md border bg-muted/30 p-3">
-              {enChargement && (
-                <p className="text-sm text-muted-foreground">
-                  Décrochage en cours...
-                </p>
-              )}
-              {dialogue.map((message) => (
-                <div
-                  key={message.id}
-                  className={cn(
-                    "max-w-[85%] rounded-lg px-3 py-2 text-sm",
-                    message.locuteur === "requerant"
-                      ? "self-start bg-secondary text-secondary-foreground"
-                      : "self-end bg-primary text-primary-foreground"
-                  )}
-                >
-                  {message.texte}
-                </div>
-              ))}
-              {envoiEnCours && (
-                <p className="self-start text-xs text-muted-foreground">
-                  Le requérant répond...
-                </p>
-              )}
-              <div ref={finDialogueRef} />
-            </div>
-
-            <form
-              className="flex gap-2"
-              onSubmit={(e) => {
-                e.preventDefault();
-                void envoyerQuestion();
-              }}
-            >
-              <Input
-                value={saisie}
-                onChange={(e) => setSaisie(e.target.value)}
-                placeholder="Posez votre question au requérant..."
-                disabled={appelClos || enChargement}
-              />
-              <Button
-                type="submit"
-                disabled={appelClos || enChargement || !saisie.trim()}
-              >
-                Envoyer
-              </Button>
-            </form>
-
-            {appelClos && (
-              <p className="rounded-md border border-dashed p-3 text-sm text-muted-foreground">
-                Appel clôturé. L&apos;écran d&apos;engagement et le débriefing
-                seront ajoutés dans une prochaine étape de construction.
-              </p>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
+      <div className="flex flex-1 flex-col gap-4 md:flex-row">
+        {/* Colonne gauche : fiche d'alerte, remplie manuellement. */}
+        <Card className="md:w-72 md:shrink-0">
           <CardHeader>
             <CardTitle className="text-sm text-muted-foreground">
               Fiche d&apos;alerte (à remplir vous-même)
@@ -261,6 +277,167 @@ export function EcranAppel({ scenarioId, libelleNeutre }: EcranAppelProps) {
                 disabled={appelClos}
               />
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Colonne centrale : dialogue avec le requérant. */}
+        <Card className="min-w-0 flex-1">
+          <CardHeader>
+            <CardTitle className="text-sm text-muted-foreground">
+              Dialogue avec le requérant
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <div className="flex max-h-[55vh] min-h-[45vh] flex-col gap-3 overflow-y-auto rounded-md border bg-muted/30 p-3">
+              {enChargement && (
+                <p className="text-sm text-muted-foreground">
+                  Décrochage en cours...
+                </p>
+              )}
+              {dialogue.map((message) => (
+                <div
+                  key={message.id}
+                  className={cn(
+                    "flex max-w-[85%] flex-col gap-0.5",
+                    message.locuteur === "requerant" ? "self-start" : "self-end"
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "rounded-lg px-3 py-2 text-sm",
+                      message.locuteur === "requerant"
+                        ? "bg-secondary text-secondary-foreground"
+                        : "bg-primary text-primary-foreground"
+                    )}
+                  >
+                    {message.texte}
+                  </div>
+                  <span
+                    className={cn(
+                      "text-[11px] text-muted-foreground",
+                      message.locuteur === "requerant" ? "text-left" : "text-right"
+                    )}
+                  >
+                    {formaterDuree(message.horodatage)}
+                  </span>
+                </div>
+              ))}
+              {envoiEnCours && (
+                <p className="self-start text-xs text-muted-foreground">
+                  Le requérant répond...
+                </p>
+              )}
+              <div ref={finDialogueRef} />
+            </div>
+
+            {aideVisible && (
+              <div className="flex flex-wrap items-center gap-1.5">
+                {QUESTIONS_RAPIDES.map((qr) => (
+                  <Button
+                    key={qr.label}
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={saisieDesactivee}
+                    onClick={() => injecterQuestionRapide(qr.question)}
+                  >
+                    {qr.label}
+                  </Button>
+                ))}
+                <button
+                  type="button"
+                  className="ml-auto text-xs text-muted-foreground underline-offset-2 hover:underline"
+                  onClick={() => setAideVisible(false)}
+                >
+                  Masquer l&apos;aide
+                </button>
+              </div>
+            )}
+            {!aideVisible && (
+              <button
+                type="button"
+                className="self-start text-xs text-muted-foreground underline-offset-2 hover:underline"
+                onClick={() => setAideVisible(true)}
+              >
+                Afficher les questions rapides
+              </button>
+            )}
+
+            <form
+              className="flex gap-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                void envoyerQuestion();
+              }}
+            >
+              <Input
+                ref={saisieRef}
+                value={saisie}
+                onChange={(e) => setSaisie(e.target.value)}
+                placeholder="Posez votre question au requérant..."
+                disabled={saisieDesactivee}
+              />
+              <Button type="submit" disabled={saisieDesactivee || !saisie.trim()}>
+                Envoyer
+              </Button>
+            </form>
+
+            {appelInterrompu && !appelClos && (
+              <p className="flex items-center gap-2 rounded-md border border-dashed p-3 text-sm text-muted-foreground">
+                <PhoneOff className="size-4 shrink-0" />
+                Le requérant a raccroché ou a perdu le réseau. Vous pouvez
+                clore l&apos;appel avec les éléments recueillis.
+              </p>
+            )}
+
+            {appelClos && (
+              <p className="rounded-md border border-dashed p-3 text-sm text-muted-foreground">
+                Appel clôturé. L&apos;écran d&apos;engagement et le débriefing
+                seront ajoutés dans une prochaine étape de construction.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Colonne droite : bandeau de situation. */}
+        <Card className="md:w-64 md:shrink-0">
+          <CardHeader>
+            <CardTitle className="text-sm text-muted-foreground">
+              Situation
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <Clock className="size-4" />
+                Chrono
+              </span>
+              <span className="font-mono text-lg tabular-nums">
+                {dureeAffichee}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">Tours</span>
+              <Badge variant="outline">{nombreDeTours}</Badge>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">Requérant</span>
+              <span className={cn("flex items-center gap-1.5 text-sm", infosEtat.classe)}>
+                <IconeEtat className="size-4" />
+                {infosEtat.libelle}
+              </span>
+            </div>
+
+            <Button
+              variant="destructive"
+              disabled={appelClos}
+              onClick={() => setAppelClos(true)}
+              className="w-full"
+            >
+              Clore l&apos;appel et engager
+            </Button>
           </CardContent>
         </Card>
       </div>

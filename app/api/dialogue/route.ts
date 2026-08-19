@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { repondreEnModeReplii } from "@/lib/moteurRepli";
+import { evolutionDeclenchee, repondreEnModeReplii } from "@/lib/moteurRepli";
 import { chargerScenario } from "@/lib/scenarios";
 import type { MessageDialogue } from "@/types/jeu";
 
@@ -37,5 +37,10 @@ export async function POST(requete: Request) {
     corps.historique ?? []
   );
 
-  return NextResponse.json(reponse);
+  const toursOperateurDejaJoues = (corps.historique ?? []).filter(
+    (m) => m.locuteur === "operateur"
+  ).length;
+  const evenement = evolutionDeclenchee(scenario, toursOperateurDejaJoues + 1);
+
+  return NextResponse.json({ ...reponse, evenement });
 }
