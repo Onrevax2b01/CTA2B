@@ -1,0 +1,67 @@
+{
+  "id": "feu-conteneur-01",
+  "titre": "Feu de conteneur à ordures en pied d'immeuble, la nuit",
+  "difficulte": 1,
+  "categorieAttendue": "INC_POUBELLE_CONTENEUR",
+  "categoriesAcceptables": ["INC_ODEUR_FUMEE_SUSPECTE"],
+  "requerant": {
+    "profil": "riverain de 35 ans, réveillé par le bruit",
+    "etatEmotionnel": "inquiet",
+    "fiabilite": "bonne",
+    "contraintes": ["est en pyjama sur son balcon, ne descend pas vérifier de près"]
+  },
+  "verite": {
+    "adresse": "12 rue des Lilas",
+    "commune": "Villeneuve-sur-Marne",
+    "precisionsAcces": "conteneurs dans une cour intérieure, portail métallique côté rue non verrouillé",
+    "numeroRappel": "06 39 98 41 12",
+    "natureReelle": "feu de conteneur à ordures ménagères, sans propagation à la façade",
+    "nbVictimes": 0,
+    "victimes": [],
+    "risques": ["fumée dense pouvant gêner les habitants des étages bas"],
+    "environnement": "nuit, pas de vent, rue calme",
+    "evolutions": [
+      {
+        "apresNTours": 4,
+        "evenement": "Ça grimpe le long du mur ! Il y a des flammes qui touchent presque le premier balcon !"
+      }
+    ]
+  },
+  "infosSpontanees": [
+    "Allô, oui bonjour, il y a un feu de poubelle en bas de mon immeuble, ça sent fort la fumée."
+  ],
+  "pieges": [
+    "Le requérant décrit des flammes qui \"montent le long de la façade\" : il faut faire préciser s'il y a réellement propagation au bâtiment ou si c'est juste la fumée qui monte, avant d'engager un moyen incendie disproportionné."
+  ],
+  "attendu": {
+    "questionsCles": [
+      { "id": "adresse", "libelle": "Adresse exacte de l'intervention", "poids": 5 },
+      { "id": "commune", "libelle": "Commune", "poids": 2 },
+      { "id": "acces", "libelle": "Précisions d'accès (cour, portail)", "poids": 3 },
+      { "id": "numero_rappel", "libelle": "Numéro de rappel", "poids": 4 },
+      { "id": "nature", "libelle": "Nature exacte du feu (conteneur, pas la façade)", "poids": 4 },
+      { "id": "nb_victimes", "libelle": "Présence ou non de victimes", "poids": 3 },
+      { "id": "risques", "libelle": "Risque de propagation à la façade", "poids": 5 },
+      { "id": "environnement", "libelle": "Conditions (vent, horaire, circulation)", "poids": 2 }
+    ],
+    "conseilsDeSauvegarde": [
+      "Demander aux habitants proches de fermer leurs fenêtres côté cour",
+      "Ne pas tenter d'éteindre le feu soi-même",
+      "Rester à distance de la fumée"
+    ],
+    "moyensAttendus": ["FPT"],
+    "moyensAcceptables": ["VPI", "FPTL"],
+    "moyensExcessifs": ["CCGC", "EPA", "VLCC"],
+    "delaiCibleTours": 6
+  },
+  "reponsesPreecrites": {
+    "adresse": "C'est le 12 rue des Lilas.",
+    "commune": "Villeneuve-sur-Marne.",
+    "acces": "Les poubelles sont dans la cour intérieure, il y a un portail en métal côté rue mais il n'est pas fermé à clé.",
+    "numero_rappel": "Vous pouvez me rappeler au 06 39 98 41 12.",
+    "nature": "C'est un des conteneurs à ordures qui a pris feu, je crois pas que ça touche le mur pour l'instant, enfin je ne suis pas sûr.",
+    "nb_victimes": "Non non, il n'y a personne de blessé, c'est juste le feu de poubelle.",
+    "risques": "Je vois de la fumée qui monte le long du mur, mais je ne vois pas de flammes sur la façade, juste sur le conteneur.",
+    "environnement": "Il n'y a pas de vent, c'est calme, il n'y a personne dans la rue à cette heure-ci."
+  }
+}
