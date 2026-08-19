@@ -2,8 +2,9 @@ import type { Scenario } from "@/types/scenario";
 import type { MessageDialogue, ReponseRequerant } from "@/types/jeu";
 
 // Normalise une chaîne pour la comparaison : minuscules, sans accents,
-// ponctuation neutralisée.
-function normaliser(texte: string): string {
+// ponctuation neutralisée. Exportée pour être réutilisée par le scoring
+// (détection des conseils de sauvegarde donnés à l'oral).
+export function normaliser(texte: string): string {
   return texte
     .toLowerCase()
     .normalize("NFD")

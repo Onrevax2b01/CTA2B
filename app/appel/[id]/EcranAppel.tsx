@@ -75,9 +75,17 @@ const QUESTIONS_RAPIDES = [
 interface EcranAppelProps {
   scenarioId: string;
   libelleNeutre: string;
+  onCloturer: (donnees: {
+    dialogue: MessageDialogue[];
+    nombreDeTours: number;
+  }) => void;
 }
 
-export function EcranAppel({ scenarioId, libelleNeutre }: EcranAppelProps) {
+export function EcranAppel({
+  scenarioId,
+  libelleNeutre,
+  onCloturer,
+}: EcranAppelProps) {
   const [dialogue, setDialogue] = useState<MessageDialogue[]>([]);
   const [saisie, setSaisie] = useState("");
   const [enChargement, setEnChargement] = useState(true);
@@ -138,7 +146,7 @@ export function EcranAppel({ scenarioId, libelleNeutre }: EcranAppelProps) {
   const nombreDeTours = dialogue.filter((m) => m.locuteur === "operateur")
     .length;
 
-  function ajouterMessageRequerant(texte: string) {
+  function ajouterMessageRequerant(texte: string, infosReveleesIds?: string[]) {
     setDialogue((precedent) => [
       ...precedent,
       {
@@ -146,6 +154,7 @@ export function EcranAppel({ scenarioId, libelleNeutre }: EcranAppelProps) {
         locuteur: "requerant",
         texte,
         horodatage: secondesEcoulees * 1000,
+        infosReveleesIds,
       },
     ]);
   }
@@ -181,7 +190,7 @@ export function EcranAppel({ scenarioId, libelleNeutre }: EcranAppelProps) {
       const reponse = (await reponseApi.json()) as ReponseRequerant;
 
       setEtatEmotionnel(reponse.etatEmotionnel);
-      ajouterMessageRequerant(reponse.reponse);
+      ajouterMessageRequerant(reponse.reponse, reponse.infosReveleesIds);
 
       if (reponse.evenement) {
         window.setTimeout(() => ajouterMessageRequerant(reponse.evenement!), 900);
@@ -205,6 +214,11 @@ export function EcranAppel({ scenarioId, libelleNeutre }: EcranAppelProps) {
   function injecterQuestionRapide(question: string) {
     setSaisie(question);
     saisieRef.current?.focus();
+  }
+
+  function clorerAppel() {
+    setAppelClos(true);
+    onCloturer({ dialogue, nombreDeTours });
   }
 
   const dureeAffichee = formaterDuree(secondesEcoulees * 1000);
@@ -389,13 +403,6 @@ export function EcranAppel({ scenarioId, libelleNeutre }: EcranAppelProps) {
                 clore l&apos;appel avec les éléments recueillis.
               </p>
             )}
-
-            {appelClos && (
-              <p className="rounded-md border border-dashed p-3 text-sm text-muted-foreground">
-                Appel clôturé. L&apos;écran d&apos;engagement et le débriefing
-                seront ajoutés dans une prochaine étape de construction.
-              </p>
-            )}
           </CardContent>
         </Card>
 
@@ -433,7 +440,7 @@ export function EcranAppel({ scenarioId, libelleNeutre }: EcranAppelProps) {
             <Button
               variant="destructive"
               disabled={appelClos}
-              onClick={() => setAppelClos(true)}
+              onClick={clorerAppel}
               className="w-full"
             >
               Clore l&apos;appel et engager

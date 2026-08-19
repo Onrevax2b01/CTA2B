@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { chargerScenario, listerResumes } from "@/lib/scenarios";
-import { EcranAppel } from "./EcranAppel";
+import { Simulateur } from "./Simulateur";
 
 export default async function PageAppel({
   params,
@@ -18,7 +18,7 @@ export default async function PageAppel({
   const resume = listerResumes().find((r) => r.id === id);
 
   return (
-    <EcranAppel
+    <Simulateur
       scenarioId={id}
       libelleNeutre={resume?.libelleNeutre ?? "Appel"}
     />
