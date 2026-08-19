@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { genererReponseLLM } from "@/lib/moteurLLM";
 import { evolutionDeclenchee, repondreEnModeReplii } from "@/lib/moteurRepli";
 import { chargerScenario } from "@/lib/scenarios";
 import type { MessageDialogue } from "@/types/jeu";
@@ -10,9 +11,26 @@ interface CorpsRequete {
   historique: MessageDialogue[];
 }
 
-// Étape 1 : uniquement le moteur de repli déterministe. Le branchement à
-// l'API Anthropic (utilisé si ANTHROPIC_API_KEY est définie) sera ajouté à
-// l'étape 3, derrière la même forme de réponse JSON.
+// Moteur conversationnel : l'API Anthropic si ANTHROPIC_API_KEY est
+// définie (une tentative, puis une retentative en cas d'échec — refus,
+// réseau, sortie invalide), sinon directement le moteur de repli. Le
+// moteur de repli sert aussi de filet de sécurité final : le jeu ne doit
+// jamais planter faute de clé ou de réponse exploitable du modèle.
+async function obtenirReponse(
+  scenario: NonNullable<ReturnType<typeof chargerScenario>>,
+  saisieOperateur: string,
+  historique: MessageDialogue[]
+) {
+  if (process.env.ANTHROPIC_API_KEY) {
+    const reponseLLM =
+      (await genererReponseLLM(scenario, saisieOperateur, historique)) ??
+      (await genererReponseLLM(scenario, saisieOperateur, historique));
+    if (reponseLLM) return reponseLLM;
+  }
+
+  return repondreEnModeReplii(scenario, saisieOperateur, historique);
+}
+
 export async function POST(requete: Request) {
   const corps = (await requete.json()) as CorpsRequete;
   const scenario = chargerScenario(corps.scenarioId);
@@ -31,13 +49,14 @@ export async function POST(requete: Request) {
     );
   }
 
-  const reponse = repondreEnModeReplii(
+  const historique = corps.historique ?? [];
+  const reponse = await obtenirReponse(
     scenario,
     corps.saisieOperateur,
-    corps.historique ?? []
+    historique
   );
 
-  const toursOperateurDejaJoues = (corps.historique ?? []).filter(
+  const toursOperateurDejaJoues = historique.filter(
     (m) => m.locuteur === "operateur"
   ).length;
   const evenement = evolutionDeclenchee(scenario, toursOperateurDejaJoues + 1);
