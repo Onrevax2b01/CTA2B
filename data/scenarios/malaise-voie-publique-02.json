@@ -1,0 +1,75 @@
+{
+  "id": "malaise-voie-publique-02",
+  "titre": "Malaise sur voie publique, homme pressé de raccrocher",
+  "difficulte": 1,
+  "categorieAttendue": "SUAP_MALAISE_VOIE_PUB",
+  "categoriesAcceptables": ["SUAP_PERSONNE_A_TERRE"],
+  "requerant": {
+    "profil": "passante de 28 ans, pressée, doit prendre un train",
+    "etatEmotionnel": "inquiet",
+    "fiabilite": "bonne",
+    "contraintes": ["veut raccrocher rapidement", "ne connaît pas la victime"]
+  },
+  "verite": {
+    "adresse": "devant le 45 avenue Jean Jaurès",
+    "commune": "Clairefontaine",
+    "precisionsAcces": "sur le trottoir, devant la boulangerie, facilement visible depuis la rue",
+    "numeroRappel": "06 39 98 22 07",
+    "natureReelle": "malaise vagal chez un homme de 60 ans, conscient, en sueurs, assis contre un mur",
+    "nbVictimes": 1,
+    "victimes": [
+      {
+        "age": "environ 60 ans",
+        "sexe": "homme",
+        "conscience": "conscient, répond aux questions",
+        "respiration": "normale",
+        "hemorragie": "aucune visible",
+        "plaintes": "dit se sentir faible et avoir des sueurs",
+        "contexte": "était en train de marcher puis s'est assis contre le mur"
+      }
+    ],
+    "risques": [],
+    "environnement": "journée, rue passante, circulation normale",
+    "evolutions": [
+      {
+        "apresNTours": 5,
+        "evenement": "Bon, il dit qu'il se sent un peu mieux là, il a moins de sueurs."
+      }
+    ]
+  },
+  "infosSpontanees": [
+    "Bonjour, il y a un monsieur assis par terre contre un mur, il n'a pas l'air bien, mais je suis pressée je dois prendre mon train."
+  ],
+  "pieges": [
+    "Le requérant essaie de raccrocher rapidement à plusieurs reprises ; l'opérateur doit le retenir suffisamment pour obtenir les informations vitales avant qu'il ne parte."
+  ],
+  "attendu": {
+    "questionsCles": [
+      { "id": "adresse", "libelle": "Adresse ou lieu précis", "poids": 5 },
+      { "id": "commune", "libelle": "Commune", "poids": 2 },
+      { "id": "numero_rappel", "libelle": "Numéro de rappel", "poids": 4 },
+      { "id": "conscience", "libelle": "État de conscience de la victime", "poids": 5 },
+      { "id": "respiration", "libelle": "Respiration de la victime", "poids": 4 },
+      { "id": "circonstances", "libelle": "Circonstances du malaise", "poids": 3 },
+      { "id": "nb_victimes", "libelle": "Nombre de personnes concernées", "poids": 2 }
+    ],
+    "conseilsDeSauvegarde": [
+      "Rester auprès de la victime jusqu'à l'arrivée des secours",
+      "Allonger la victime et surélever les jambes si elle se sent faible",
+      "Rappeler si l'état s'aggrave"
+    ],
+    "moyensAttendus": ["VSAV"],
+    "moyensAcceptables": ["VLI"],
+    "moyensExcessifs": ["SMUR", "EPA", "FPT"],
+    "delaiCibleTours": 5
+  },
+  "reponsesPreecrites": {
+    "adresse": "C'est devant le 45 avenue Jean Jaurès, devant la boulangerie.",
+    "commune": "Clairefontaine.",
+    "numero_rappel": "06 39 98 22 07, mais dépêchez-vous, je dois y aller.",
+    "conscience": "Oui il répond, il me parle, mais il a l'air fatigué.",
+    "respiration": "Oui il respire normalement je crois.",
+    "circonstances": "Il marchait et puis il s'est assis contre le mur, il dit qu'il a des sueurs.",
+    "nb_victimes": "Non y'a que lui, personne d'autre."
+  }
+}

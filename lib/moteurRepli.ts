@@ -47,6 +47,14 @@ const CONCEPTS: Concept[] = [
     motsCles: ["combien", "victimes", "blesse", "personnes touchees"],
   },
   {
+    cle: "age",
+    motsCles: ["quel age", "quelle age", "age a t il", "age a t elle", "age approximatif"],
+  },
+  {
+    cle: "circonstances",
+    motsCles: ["circonstances", "comment c est arrive", "comment est ce arrive", "que faisait"],
+  },
+  {
     cle: "risques",
     motsCles: ["danger", "risque", "gaz", "electri", "propagation", "fumee"],
   },

@@ -1,0 +1,82 @@
+{
+  "id": "arret-cardiaque-domicile-03",
+  "titre": "Arrêt cardiaque à domicile, épouse paniquée",
+  "difficulte": 3,
+  "categorieAttendue": "SUAP_ARRET_CARDIAQUE",
+  "categoriesAcceptables": ["SUAP_DETRESSE_RESP", "SUAP_PERSONNE_A_TERRE"],
+  "requerant": {
+    "profil": "épouse de 68 ans, très paniquée",
+    "etatEmotionnel": "paniqué",
+    "fiabilite": "moyenne",
+    "contraintes": [
+      "pleure et coupe la parole",
+      "a du mal à compter ou à suivre des instructions précises au début"
+    ]
+  },
+  "verite": {
+    "adresse": "8 rue des Acacias, bâtiment B, 2e étage, porte droite",
+    "commune": "Vallonnier",
+    "precisionsAcces": "digicode 4471B, ascenseur en panne",
+    "numeroRappel": "06 39 98 77 54",
+    "natureReelle": "arrêt cardio-respiratoire chez un homme de 71 ans, inconscient, gasps agoniques pris pour de la respiration",
+    "nbVictimes": 1,
+    "victimes": [
+      {
+        "age": "71 ans",
+        "sexe": "homme",
+        "conscience": "inconscient, ne répond pas, ne réagit pas à la voix ni au toucher",
+        "respiration": "respiration bruyante et irrégulière, par à-coups (gasps, à ne pas confondre avec une respiration normale)",
+        "hemorragie": "aucune",
+        "plaintes": "aucune, il ne parle plus",
+        "contexte": "était en train de regarder la télévision quand il s'est effondré"
+      }
+    ],
+    "risques": [],
+    "environnement": "appartement, soirée, calme",
+    "evolutions": [
+      {
+        "apresNTours": 3,
+        "evenement": "Il ne fait même plus ce bruit bizarre... je crois qu'il ne respire plus du tout !"
+      }
+    ]
+  },
+  "infosSpontanees": [
+    "Allô ! Vite, mon mari il est tombé, il bouge plus, aidez-moi !"
+  ],
+  "pieges": [
+    "Le requérant décrit la respiration agonique de la victime comme \"il respire fort\" ou \"il fait du bruit en respirant\" : c'est un piège classique de reconnaissance de l'arrêt cardiaque (gasps), à ne pas confondre avec une respiration normale.",
+    "La panique du requérant rend le guidage du massage cardiaque difficile : il faut des instructions courtes, répétées, très directives."
+  ],
+  "attendu": {
+    "questionsCles": [
+      { "id": "adresse", "libelle": "Adresse exacte y compris étage", "poids": 5 },
+      { "id": "commune", "libelle": "Commune", "poids": 2 },
+      { "id": "acces", "libelle": "Précisions d'accès (digicode, ascenseur)", "poids": 3 },
+      { "id": "numero_rappel", "libelle": "Numéro de rappel", "poids": 4 },
+      { "id": "conscience", "libelle": "Absence de conscience confirmée", "poids": 6 },
+      { "id": "respiration", "libelle": "Caractère anormal de la respiration (gasps)", "poids": 6 },
+      { "id": "age", "libelle": "Âge approximatif de la victime", "poids": 2 },
+      { "id": "circonstances", "libelle": "Circonstances de la chute/du malaise", "poids": 2 }
+    ],
+    "conseilsDeSauvegarde": [
+      "Guider le massage cardiaque immédiatement",
+      "Demander de mettre la victime sur un plan dur, à même le sol",
+      "Demander s'il y a un défibrillateur (DAE) à proximité et le faire chercher",
+      "Rester en ligne et compter le rythme du massage avec le requérant"
+    ],
+    "moyensAttendus": ["VSAV", "SMUR", "VLI"],
+    "moyensAcceptables": ["FORCES_ORDRE"],
+    "moyensExcessifs": ["FPT", "EPA", "GRIMP"],
+    "delaiCibleTours": 8
+  },
+  "reponsesPreecrites": {
+    "adresse": "Le 8 rue des Acacias, bâtiment B, on est au 2ème étage, porte de droite.",
+    "commune": "Vallonnier.",
+    "acces": "Il faut le code 4471B, et l'ascenseur est en panne, il faut monter à pied.",
+    "numero_rappel": "06 39 98 77 54.",
+    "conscience": "Non il répond pas, je lui parle, je le secoue, rien !",
+    "respiration": "Il fait un bruit bizarre, comme s'il respirait fort, par à-coups, je sais pas...",
+    "age": "Il a 71 ans.",
+    "circonstances": "Il était devant la télé et il est tombé d'un coup de son fauteuil."
+  }
+}

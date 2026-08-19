@@ -1,0 +1,73 @@
+{
+  "id": "odeur-gaz-immeuble-06",
+  "titre": "Odeur de gaz dans un immeuble",
+  "difficulte": 2,
+  "categorieAttendue": "RT_ODEUR_GAZ",
+  "categoriesAcceptables": ["RT_FUITE_GAZ"],
+  "requerant": {
+    "profil": "voisin de palier, 50 ans, sent une forte odeur dans le couloir",
+    "etatEmotionnel": "inquiet",
+    "fiabilite": "bonne",
+    "contraintes": [
+      "ne sait pas d'où vient exactement l'odeur",
+      "hésite à sonner chez le voisin"
+    ]
+  },
+  "verite": {
+    "adresse": "5 rue du Marché, bâtiment A, 3e étage",
+    "commune": "Bellerive",
+    "precisionsAcces": "escalier unique, l'odeur est plus forte devant la porte de l'appartement 31",
+    "numeroRappel": "06 39 98 40 26",
+    "natureReelle": "forte odeur de gaz dans le couloir du 3e étage, origine non confirmée, probable fuite chez un voisin absent",
+    "nbVictimes": 0,
+    "victimes": [],
+    "risques": [
+      "risque d'explosion si la fuite est confirmée et qu'une source d'ignition est actionnée",
+      "plusieurs appartements sur le palier"
+    ],
+    "environnement": "immeuble d'habitation, fin de journée, plusieurs résidents présents",
+    "evolutions": [
+      {
+        "apresNTours": 5,
+        "evenement": "Ça sent vraiment de plus en plus fort maintenant, même mes voisins d'en face commencent à sortir sur le palier."
+      }
+    ]
+  },
+  "infosSpontanees": [
+    "Bonjour, je vous appelle parce que ça sent très fort le gaz dans le couloir de mon immeuble."
+  ],
+  "pieges": [
+    "La tentation est d'engager immédiatement des moyens lourds : il faut d'abord qualifier l'odeur (forte ? localisée ?) et faire évacuer sans manœuvrer d'interrupteur électrique, avant d'engager les moyens adaptés.",
+    "Le requérant ne doit surtout pas être invité à sonner chez le voisin ou à actionner un interrupteur : consigne de sécurité essentielle à ne pas oublier."
+  ],
+  "attendu": {
+    "questionsCles": [
+      { "id": "adresse", "libelle": "Adresse de l'immeuble", "poids": 5 },
+      { "id": "commune", "libelle": "Commune", "poids": 2 },
+      { "id": "acces", "libelle": "Étage et localisation précise de l'odeur", "poids": 5 },
+      { "id": "numero_rappel", "libelle": "Numéro de rappel", "poids": 4 },
+      { "id": "nature", "libelle": "Intensité et localisation de l'odeur", "poids": 5 },
+      { "id": "nb_victimes", "libelle": "Présence ou non de victimes/malaises", "poids": 3 },
+      { "id": "risques", "libelle": "Nombre de personnes dans l'immeuble, sources d'ignition", "poids": 4 }
+    ],
+    "conseilsDeSauvegarde": [
+      "Ne pas actionner d'interrupteur électrique ni de sonnette",
+      "Ne pas allumer de flamme",
+      "Faire évacuer le palier et aérer si possible sans danger",
+      "Ne pas sonner chez le voisin"
+    ],
+    "moyensAttendus": ["FPT"],
+    "moyensAcceptables": ["VTU", "FORCES_ORDRE"],
+    "moyensExcessifs": ["CCGC", "CCF", "EPA", "GRIMP"],
+    "delaiCibleTours": 7
+  },
+  "reponsesPreecrites": {
+    "adresse": "C'est le 5 rue du Marché.",
+    "commune": "Bellerive.",
+    "acces": "On est au 3ème étage, l'odeur est plus forte devant la porte de l'appartement 31.",
+    "numero_rappel": "06 39 98 40 26.",
+    "nature": "Ça sent vraiment très fort le gaz, surtout devant cette porte-là, je ne sais pas si quelqu'un est chez lui.",
+    "nb_victimes": "Non, je ne pense pas, je n'ai vu personne mal en point.",
+    "risques": "Y'a plusieurs appartements sur le palier, je ne sais pas s'ils sont tous occupés en ce moment."
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "id": "feu-appartement-etage-05",
+  "titre": "Feu d'appartement en étage, mère confinée avec un enfant",
+  "difficulte": 3,
+  "categorieAttendue": "INC_APPARTEMENT_ETAGE",
+  "categoriesAcceptables": ["INC_HABITATION"],
+  "requerant": {
+    "profil": "mère de famille, 33 ans, confinée dans la salle de bain avec son enfant",
+    "etatEmotionnel": "paniqué",
+    "fiabilite": "moyenne",
+    "contraintes": [
+      "ne peut pas sortir de l'appartement",
+      "entend du bruit et sent la fumée sous la porte",
+      "a son enfant de 4 ans avec elle"
+    ]
+  },
+  "verite": {
+    "adresse": "22 boulevard des Tilleuls, bâtiment C, 4e étage, appartement 42",
+    "commune": "Rouvray",
+    "precisionsAcces": "escalier C, interphone \"DURAND - 42\"",
+    "numeroRappel": "06 39 98 63 19",
+    "natureReelle": "feu dans le salon d'un appartement au 4e étage, probablement d'origine électrique, fumée envahissant l'appartement",
+    "nbVictimes": 2,
+    "victimes": [
+      {
+        "age": "33 ans",
+        "sexe": "femme",
+        "conscience": "consciente, paniquée",
+        "respiration": "un peu essoufflée, tousse",
+        "hemorragie": "aucune",
+        "plaintes": "a peur, tousse à cause de la fumée",
+        "contexte": "confinée dans la salle de bain de l'appartement en feu"
+      },
+      {
+        "age": "4 ans",
+        "sexe": "enfant",
+        "conscience": "conscient",
+        "respiration": "normale",
+        "hemorragie": "aucune",
+        "plaintes": "pleure, a peur",
+        "contexte": "avec sa mère dans la salle de bain"
+      }
+    ],
+    "risques": [
+      "fumée envahissante",
+      "propagation possible aux appartements voisins",
+      "personnes confinées ne pouvant pas évacuer seules"
+    ],
+    "environnement": "soirée, immeuble d'habitation, autres résidents dans le bâtiment",
+    "evolutions": [
+      {
+        "apresNTours": 4,
+        "evenement": "Ça sent de plus en plus fort la fumée sous la porte, mon fils tousse beaucoup, dépêchez-vous !"
+      }
+    ]
+  },
+  "infosSpontanees": [
+    "Allô, au secours, il y a le feu dans mon appartement, je suis coincée avec mon fils, on peut pas sortir !"
+  ],
+  "pieges": [
+    "Le réflexe dangereux serait de dire à la requérante de sortir immédiatement en traversant la fumée : il faut au contraire donner des consignes de confinement (calfeutrer la porte, rester près d'une fenêtre) tant que les secours ne sont pas sur place.",
+    "Il faut localiser précisément l'appartement dans l'immeuble (escalier, étage, porte) pour permettre l'intervention rapide des sauveteurs."
+  ],
+  "attendu": {
+    "questionsCles": [
+      { "id": "adresse", "libelle": "Adresse exacte de l'immeuble", "poids": 5 },
+      { "id": "commune", "libelle": "Commune", "poids": 2 },
+      { "id": "acces", "libelle": "Localisation précise dans l'immeuble (escalier, étage, porte)", "poids": 5 },
+      { "id": "numero_rappel", "libelle": "Numéro de rappel", "poids": 4 },
+      { "id": "nb_victimes", "libelle": "Nombre de personnes confinées", "poids": 3 },
+      { "id": "conscience", "libelle": "État des personnes confinées", "poids": 3 },
+      { "id": "risques", "libelle": "Propagation et enfumement", "poids": 4 }
+    ],
+    "conseilsDeSauvegarde": [
+      "Calfeutrer le bas de la porte avec un linge mouillé",
+      "Rester près d'une fenêtre et se signaler",
+      "Ne pas sortir dans les escaliers enfumés",
+      "Rester en ligne autant que possible"
+    ],
+    "moyensAttendus": ["FPT", "EPA"],
+    "moyensAcceptables": ["FPTL", "VSAV"],
+    "moyensExcessifs": ["CCF", "CCGC"],
+    "delaiCibleTours": 7
+  },
+  "reponsesPreecrites": {
+    "adresse": "C'est le 22 boulevard des Tilleuls.",
+    "commune": "Rouvray.",
+    "acces": "On est dans le bâtiment C, au 4ème étage, appartement 42, sur l'interphone c'est marqué DURAND.",
+    "numero_rappel": "06 39 98 63 19.",
+    "nb_victimes": "On est deux, moi et mon fils, il a 4 ans.",
+    "conscience": "On va bien, enfin on a peur, mais on est conscients, on tousse un peu.",
+    "risques": "Ça sent de plus en plus la fumée sous la porte, j'ai peur que ça rentre chez nous."
+  }
+}

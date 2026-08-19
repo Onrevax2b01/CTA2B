@@ -1,0 +1,88 @@
+{
+  "id": "avp-departementale-04",
+  "titre": "Accident de la route sur départementale, personne coincée",
+  "difficulte": 2,
+  "categorieAttendue": "AVP_VICTIME_INCARCEREE",
+  "categoriesAcceptables": ["AVP_AVEC_VICTIMES"],
+  "requerant": {
+    "profil": "automobiliste témoin, 40 ans, ne sait pas se repérer précisément",
+    "etatEmotionnel": "inquiet",
+    "fiabilite": "mauvaise",
+    "contraintes": [
+      "ne connaît pas le nom exact de la route",
+      "doit chercher des repères autour de lui"
+    ]
+  },
+  "verite": {
+    "adresse": "RD 912, entre les bornes kilométriques 14 et 15, à hauteur du panneau \"Bois de Fontenay\"",
+    "commune": "proche de Fontenay-le-Puits",
+    "precisionsAcces": "sur la voie descendante, dans le virage juste après le panneau d'entrée de forêt",
+    "numeroRappel": "06 39 98 15 88",
+    "natureReelle": "collision entre deux véhicules légers, une conductrice coincée dans son véhicule, portière avant enfoncée",
+    "nbVictimes": 2,
+    "victimes": [
+      {
+        "age": "environ 35 ans",
+        "sexe": "femme",
+        "conscience": "consciente, répond",
+        "respiration": "normale",
+        "hemorragie": "petite coupure au front",
+        "plaintes": "douleur à la jambe, ne peut pas sortir seule",
+        "contexte": "conductrice du véhicule, coincée par la portière enfoncée"
+      },
+      {
+        "age": "environ 45 ans",
+        "sexe": "homme",
+        "conscience": "conscient",
+        "respiration": "normale",
+        "hemorragie": "aucune",
+        "plaintes": "choqué mais debout, se plaint du cou",
+        "contexte": "conducteur du second véhicule, sorti seul de la voiture"
+      }
+    ],
+    "risques": ["circulation dense sur la route, pas de balisage"],
+    "environnement": "fin d'après-midi, route départementale, virage peu visible",
+    "evolutions": [
+      {
+        "apresNTours": 5,
+        "evenement": "Y'a d'autres voitures qui arrivent vite dans le virage, j'ai peur qu'il y ait un carambolage !"
+      }
+    ]
+  },
+  "infosSpontanees": [
+    "Allô, y'a eu un accident, deux voitures se sont percutées sur la route, y'a quelqu'un coincé dedans !"
+  ],
+  "pieges": [
+    "Le requérant ne sait pas donner une adresse précise : il faut le faire chercher un point de repère (borne kilométrique, panneau, sortie) pour localiser l'accident.",
+    "Deux victimes aux situations différentes : la conductrice incarcérée est prioritaire, mais l'opérateur doit bien caractériser les deux."
+  ],
+  "attendu": {
+    "questionsCles": [
+      { "id": "adresse", "libelle": "Localisation précise (route, repère, sens)", "poids": 6 },
+      { "id": "commune", "libelle": "Commune la plus proche", "poids": 2 },
+      { "id": "numero_rappel", "libelle": "Numéro de rappel", "poids": 4 },
+      { "id": "nb_victimes", "libelle": "Nombre de victimes", "poids": 4 },
+      { "id": "conscience", "libelle": "État de conscience des victimes", "poids": 4 },
+      { "id": "circonstances", "libelle": "Personne coincée ou non (incarcération)", "poids": 5 },
+      { "id": "risques", "libelle": "Risque de sur-accident (circulation)", "poids": 4 }
+    ],
+    "conseilsDeSauvegarde": [
+      "Ne pas essayer de désincarcérer la victime soi-même",
+      "Baliser ou faire ralentir la circulation si possible en sécurité",
+      "Ne pas déplacer les blessés sauf danger immédiat"
+    ],
+    "moyensAttendus": ["VSAV", "VSR", "FORCES_ORDRE"],
+    "moyensAcceptables": ["FPTL"],
+    "moyensExcessifs": ["EPA", "CCF", "GRIMP"],
+    "delaiCibleTours": 7
+  },
+  "reponsesPreecrites": {
+    "adresse": "Euh, je sais pas trop, c'est sur la route qui va vers Fontenay, y'a un panneau \"Bois de Fontenay\" juste avant.",
+    "commune": "Je crois que c'est vers Fontenay-le-Puits.",
+    "numero_rappel": "06 39 98 15 88.",
+    "nb_victimes": "Y'en a deux, une dans la voiture et un monsieur qui est sorti.",
+    "conscience": "Ils sont conscients tous les deux, ils parlent.",
+    "circonstances": "La dame elle est coincée, la portière est enfoncée, elle arrive pas à sortir. Le monsieur lui il est sorti tout seul.",
+    "risques": "Y'a des voitures qui passent vite dans le virage, c'est dangereux là où on est."
+  }
+}
